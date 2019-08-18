@@ -1,5 +1,5 @@
 import React, { useContext, useReducer } from 'react';
-import PropTypes from 'prop-types';
+import { AppProvider, useAppState } from './state';
 import './index.css';
 
 // init state
@@ -7,9 +7,7 @@ const initialState = {
   count: 0
 };
 
-// Context
-const AppContext = React.createContext();
-const AppReducer = (state, action) => {
+const reducer = (state, action) => {
   switch (action.type) {
     case 'count.add':
       return { ...state, count: state.count + 1 };
@@ -20,18 +18,17 @@ const AppReducer = (state, action) => {
   }
 };
 
-// Provider
-const AppProvider = props => {
-  let [state, dispatch] = useReducer(AppReducer, initialState);
-  return <AppContext.Provider value={{ state, dispatch }}>{props.children}</AppContext.Provider>;
-};
-
-AppProvider.propTypes = {
-  children: PropTypes.element.isRequired
-};
+function App() {
+  return (
+    <AppProvider initialState={initialState} reducer={reducer}>
+      <AppContainer />
+    </AppProvider>
+  );
+}
 
 function AppContainer() {
-  const { state, dispatch } = useContext(AppContext);
+  const { state, dispatch } = useAppState();
+
   return (
     <div className="App">
       <header className="App-header">
@@ -62,7 +59,8 @@ function AppContainer() {
 }
 
 function Demo() {
-  const { state, dispatch } = useContext(AppContext);
+  const { state, dispatch } = useAppState();
+
   // console.log('demo');
   return (
     <div className="demo">
@@ -83,14 +81,6 @@ function Demo() {
         -
       </button>
     </div>
-  );
-}
-
-function App() {
-  return (
-    <AppProvider>
-      <AppContainer />
-    </AppProvider>
   );
 }
 
