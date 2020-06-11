@@ -4,7 +4,7 @@ import './index.css';
 
 // init state
 const initialState = {
-  count: 0
+  count: 0,
 };
 
 const reducer = (state, action) => {
